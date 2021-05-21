@@ -134,16 +134,7 @@ export default function StickyHeadTable() {
     });
   }
 
-  //12149961
-
-  const findAquaPrice = ({
-    timestamp,
-    uniBalance,
-    xioAppBalance,
-    xioAppBalance2,
-    xioBalance,
-    blockNumber,
-  }) => {
+  const findAquaPrice = ({ timestamp, uniBalance, xioAppBalance, xioAppBalance2, xioBalance }) => {
     let xioApp;
     let uniswap;
     const month = new Date(timestamp * 1000).getMonth();
@@ -156,24 +147,19 @@ export default function StickyHeadTable() {
       xioApp = new BigNumber(25);
     }
 
-    if (blockNumber === 12149961) {
-      uniswap = uniswap.multipliedBy(2);
-      xioApp = xioApp.multipliedBy(2);
-    }
-
-    const uniswapPrice = uniswap.multipliedBy(uniBalance).dividedBy(100);
-    const xioAppPrice = xioApp.multipliedBy(xioAppBalance).dividedBy(100);
-    const xioAppPricev2 = xioApp.multipliedBy(xioAppBalance2).dividedBy(100);
-    const xioPrice = xioApp.multipliedBy(xioBalance).dividedBy(100);
+    const uniswapPrice = uniswap.multipliedBy(new BigNumber(uniBalance)).dividedBy(100).toFixed(0);
+    const xioAppPrice = xioApp.multipliedBy(new BigNumber(xioAppBalance)).dividedBy(100).toFixed(0);
+    const xioAppPricev2 = xioApp
+      .multipliedBy(new BigNumber(xioAppBalance2))
+      .dividedBy(100)
+      .toFixed(0);
+    const xioPrice = xioApp.multipliedBy(new BigNumber(xioBalance)).dividedBy(100).toFixed(0);
 
     const aquaPrice = uniswapPrice.plus(xioAppPrice).plus(xioAppPricev2).plus(xioPrice).toString();
-    // const aquaPrice =
-    //   Number(uniswapPrice) + Number(xioAppPrice) + Number(xioAppPricev2) + Number(xioPrice);
     ap = new BigNumber(ap).plus(aquaPrice);
     console.log(ap.toString());
 
-    //return uniswapPrice.plus(xioAppPrice).plus(xioAppPricev2).plus(xioPrice).toString();
-    return aquaPrice;
+    return uniswapPrice.plus(xioAppPrice).plus(xioAppPricev2).plus(xioPrice).toString();
   };
 
   //console.log(ap);
