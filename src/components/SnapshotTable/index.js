@@ -94,7 +94,7 @@ export default function StickyHeadTable() {
   const [rows, setRows] = useState([]);
 
   //const [ap, setAp] = useState(0);
-  let ap = 0;
+  //let ap = 0;
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -109,7 +109,7 @@ export default function StickyHeadTable() {
     (async () => {
       if (userSnapshot) {
         let snapshots = [...userSnapshot?.data?.balances];
-        // console.log(snapshots);
+        //console.log(snapshots);
         const newSnapshots = formatSnapshotBalance(snapshots);
 
         setRows(sortSnapshot(newSnapshots));
@@ -179,9 +179,9 @@ export default function StickyHeadTable() {
       .plus(xioAppPrice)
       .plus(xioAppPricev2)
       .plus(xioPrice)
-      .toString();
-    ap = new BigNumber(ap).plus(aquaPrice);
-    // console.log(ap.toString());
+      .toFixed(2);
+    //ap = new BigNumber(ap).plus(aquaPrice);
+    //console.log(ap.toString());
     return aquaPrice;
   };
 
@@ -204,44 +204,45 @@ export default function StickyHeadTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {/* slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage) */}
-            {rows.map((row) => {
-              return (
-                <TableRow
-                  hover
-                  role="checkbox"
-                  tabIndex={-1}
-                  key={row.timestamp}
-                >
-                  {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell
-                        key={column.id}
-                        align={column.align}
-                        className={classes.tableBodyCell}
-                      >
-                        {column.format && typeof value === "number"
-                          ? column.format(value)
-                          : column.id === "day"
-                          ? row["blockNumber"] === 12149961
-                            ? `${value}-${format(
-                                new Date(1617115051 * 1000),
-                                "MMM"
-                              )}`
-                            : `${value}-${format(
-                                new Date(row["timestamp"] * 1000),
-                                "MMM"
-                              )}`
-                          : column.id === "aquaPrice"
-                          ? findAquaPrice(row)
-                          : value}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              );
-            })}
+            {rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row) => {
+                return (
+                  <TableRow
+                    hover
+                    role="checkbox"
+                    tabIndex={-1}
+                    key={row.timestamp}
+                  >
+                    {columns.map((column) => {
+                      const value = row[column.id];
+                      return (
+                        <TableCell
+                          key={column.id}
+                          align={column.align}
+                          className={classes.tableBodyCell}
+                        >
+                          {column.format && typeof value === "number"
+                            ? column.format(value)
+                            : column.id === "day"
+                            ? row["blockNumber"] === 12149961
+                              ? `${value}-${format(
+                                  new Date(1617115051 * 1000),
+                                  "MMM"
+                                )}`
+                              : `${value}-${format(
+                                  new Date(row["timestamp"] * 1000),
+                                  "MMM"
+                                )}`
+                            : column.id === "aquaPrice"
+                            ? findAquaPrice(row)
+                            : value}
+                        </TableCell>
+                      );
+                    })}
+                  </TableRow>
+                );
+              })}
           </TableBody>
         </Table>
       </TableContainer>
