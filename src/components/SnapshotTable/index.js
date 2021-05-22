@@ -130,6 +130,7 @@ export default function StickyHeadTable() {
         xioBalance: parseFloat(web3.utils.fromWei(snapshot.xioBalance)).toFixed(2),
         xioAppBalance: parseFloat(web3.utils.fromWei(snapshot.xioAppBalance)).toFixed(2),
         uniBalance: parseFloat(web3.utils.fromWei(snapshot.uniBalance)).toFixed(2),
+        xioAppBalance2: parseFloat(web3.utils.fromWei(snapshot.xioAppBalance2)).toFixed(2),
       };
     });
   }
@@ -167,16 +168,10 @@ export default function StickyHeadTable() {
     const xioPrice = xioApp.multipliedBy(xioBalance).dividedBy(100);
 
     const aquaPrice = uniswapPrice.plus(xioAppPrice).plus(xioAppPricev2).plus(xioPrice).toString();
-    // const aquaPrice =
-    //   Number(uniswapPrice) + Number(xioAppPrice) + Number(xioAppPricev2) + Number(xioPrice);
     ap = new BigNumber(ap).plus(aquaPrice);
     console.log(ap.toString());
-
-    //return uniswapPrice.plus(xioAppPrice).plus(xioAppPricev2).plus(xioPrice).toString();
     return aquaPrice;
   };
-
-  //console.log(ap);
 
   return (
     <Paper className={classes.root}>
@@ -212,7 +207,9 @@ export default function StickyHeadTable() {
                         {column.format && typeof value === 'number'
                           ? column.format(value)
                           : column.id === 'day'
-                          ? `${value}-${format(new Date(row['timestamp'] * 1000), 'MMM')}`
+                          ? row['blockNumber'] === 12149961
+                            ? `${value}-${format(new Date(1617115051 * 1000), 'MMM')}`
+                            : `${value}-${format(new Date(row['timestamp'] * 1000), 'MMM')}`
                           : column.id === 'aquaPrice'
                           ? findAquaPrice(row)
                           : value}
